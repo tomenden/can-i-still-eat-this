@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import LoginPage from "@/pages/LoginPage";
 import SetupPage from "@/pages/SetupPage";
+import CheckPage from "@/pages/CheckPage";
 
 function App() {
   return (
@@ -10,12 +11,10 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/setup" element={<ProtectedRoute><SetupPage /></ProtectedRoute>} />
         <Route
-          path="/*"
+          path="/"
           element={
             <ProtectedRoute>
-              <div className="min-h-screen flex items-center justify-center">
-                <p className="text-gray-500">Main screen coming next.</p>
-              </div>
+              <CheckPage />
             </ProtectedRoute>
           }
         />
