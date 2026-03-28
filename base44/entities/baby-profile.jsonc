@@ -1,0 +1,22 @@
+{
+  "name": "BabyProfile",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Baby's name"
+    },
+    "date_of_birth": {
+      "type": "string",
+      "format": "date",
+      "description": "Baby's date of birth"
+    }
+  },
+  "required": ["name", "date_of_birth"],
+  "rls": {
+    "create": true,
+    "read": { "created_by": "{{user.email}}" },
+    "update": { "created_by": "{{user.email}}" },
+    "delete": { "created_by": "{{user.email}}" }
+  }
+}
