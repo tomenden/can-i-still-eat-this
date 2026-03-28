@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
 
 const TIME_CHIPS = [
@@ -13,7 +13,7 @@ export default function CheckPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const [profile, setProfile] = useState(null);
-  const [forBaby, setForBaby] = useState(true);
+  const [forBaby, setForBaby] = useState(false);
   const [foodText, setFoodText] = useState("");
   const [photoFile, setPhotoFile] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
@@ -24,7 +24,10 @@ export default function CheckPage() {
 
   useEffect(() => {
     base44.entities.BabyProfile.list(null, 1).then((profiles) => {
-      if (profiles.length > 0) setProfile(profiles[0]);
+      if (profiles.length > 0) {
+        setProfile(profiles[0]);
+        setForBaby(true);
+      }
     });
   }, []);
 
@@ -158,7 +161,7 @@ Respond ONLY with the JSON object, no other text.`;
         </div>
 
         {/* Who's eating toggle */}
-        {profile && (
+        {profile ? (
           <div className="flex bg-gray-200 rounded-lg p-1 mb-5">
             <button
               onClick={() => setForBaby(true)}
@@ -180,6 +183,15 @@ Respond ONLY with the JSON object, no other text.`;
             >
               🧑 For Me
             </button>
+          </div>
+        ) : (
+          <div className="text-center mb-5">
+            <Link
+              to="/setup"
+              className="text-sm text-blue-600 hover:text-blue-700"
+            >
+              + Add baby profile for age-specific advice
+            </Link>
           </div>
         )}
 

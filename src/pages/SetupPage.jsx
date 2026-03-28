@@ -77,9 +77,13 @@ export default function SetupPage() {
           {saving ? "Saving..." : "Save & Continue"}
         </button>
 
-        <p className="text-center text-gray-400 text-xs mt-4">
-          You can also check food safety for yourself
-        </p>
+        <button
+          type="button"
+          onClick={() => navigate("/", { replace: true })}
+          className="w-full mt-3 rounded-lg bg-gray-100 px-4 py-3 text-gray-600 font-medium hover:bg-gray-200 transition-colors"
+        >
+          Skip — just check for myself
+        </button>
       </form>
     </div>
   );
