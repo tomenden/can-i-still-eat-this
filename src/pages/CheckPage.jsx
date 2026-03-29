@@ -219,6 +219,14 @@ Respond ONLY with the JSON object, no other text.`;
               + Add baby profile
             </Link>
           )}
+          <button
+            onClick={() => {
+              base44.auth.logout("/login");
+            }}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            Sign out
+          </button>
         </div>
 
         {/* Food input */}
