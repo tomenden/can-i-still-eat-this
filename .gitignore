@@ -19,3 +19,7 @@ dist
 .app.json*
 .types/
 .superpowers/
+
+# Skills (materialized directories - restorable from skills-lock.json)
+skills/
+.**/skills/
