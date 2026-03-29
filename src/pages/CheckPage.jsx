@@ -13,6 +13,7 @@ export default function CheckPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const [profile, setProfile] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   const [forBaby, setForBaby] = useState(false);
   const [foodText, setFoodText] = useState("");
   const [photoFile, setPhotoFile] = useState(null);
@@ -28,6 +29,9 @@ export default function CheckPage() {
         setProfile(profiles[0]);
         setForBaby(true);
       }
+    });
+    base44.entities.UserProfile.list(null, 1).then((profiles) => {
+      if (profiles.length > 0) setUserProfile(profiles[0]);
     });
   }, []);
 
@@ -82,9 +86,14 @@ export default function CheckPage() {
           )
         : null;
 
-      const eaterDescription = forBaby && profile
-        ? `a baby named ${profile.name}, who is ${babyAge} months old`
-        : "an adult";
+      let eaterDescription;
+      if (forBaby && profile) {
+        eaterDescription = `a baby named ${profile.name}, who is ${babyAge} months old`;
+      } else if (userProfile?.is_pregnant) {
+        eaterDescription = `an adult who is currently pregnant`;
+      } else {
+        eaterDescription = "an adult";
+      }
 
       const foodDescription = foodText
         ? `The food is: ${foodText}`
@@ -99,9 +108,10 @@ Today's date is: ${new Date().toLocaleDateString("en-US", { weekday: "long", yea
 
 The person who would eat this food is: ${eaterDescription}.
 
-Analyze the food safety and respond with a JSON object. Be conservative — when in doubt, err on the side of caution, especially for babies and toddlers. Consider:
+Analyze the food safety and respond with a JSON object. Be conservative — when in doubt, err on the side of caution, especially for babies, toddlers, and pregnant women. Consider:
 - How long the food type typically stays safe when refrigerated
 - Age-appropriate risks for babies/toddlers
+- Pregnancy-specific risks (listeria, mercury, toxoplasmosis, etc.) if the eater is pregnant
 - Common food safety guidelines from health authorities
 
 Respond ONLY with the JSON object, no other text.`;
@@ -139,7 +149,7 @@ Respond ONLY with the JSON object, no other text.`;
         file_urls: fileUrls.length > 0 ? fileUrls : undefined,
       });
 
-      navigate("/result", { state: { result, forBaby, profile } });
+      navigate("/result", { state: { result, forBaby, profile, userProfile } });
     } catch (err) {
       setError("Something went wrong. Please try again.");
       setChecking(false);
@@ -162,7 +172,7 @@ Respond ONLY with the JSON object, no other text.`;
 
         {/* Who's eating toggle */}
         {profile ? (
-          <div className="flex bg-gray-200 rounded-lg p-1 mb-5">
+          <div className="flex bg-gray-200 rounded-lg p-1 mb-3">
             <button
               onClick={() => setForBaby(true)}
               className={`flex-1 text-center py-2 rounded-md text-sm font-semibold transition-colors ${
@@ -181,11 +191,11 @@ Respond ONLY with the JSON object, no other text.`;
                   : "text-gray-500"
               }`}
             >
-              🧑 For Me
+              🧑 For {userProfile?.name || "Me"}
             </button>
           </div>
         ) : (
-          <div className="text-center mb-5">
+          <div className="text-center mb-3">
             <Link
               to="/setup"
               className="text-sm text-blue-600 hover:text-blue-700"
@@ -194,6 +204,22 @@ Respond ONLY with the JSON object, no other text.`;
             </Link>
           </div>
         )}
+        <div className="flex justify-center gap-3 mb-5 text-xs">
+          <Link
+            to="/my-profile"
+            className="text-blue-600 hover:text-blue-700"
+          >
+            {userProfile ? "Edit my profile" : "+ Set up my profile"}
+          </Link>
+          {!profile && (
+            <Link
+              to="/setup"
+              className="text-blue-600 hover:text-blue-700"
+            >
+              + Add baby profile
+            </Link>
+          )}
+        </div>
 
         {/* Food input */}
         <div className="mb-4">

@@ -15,6 +15,11 @@
       "source": "base44/skills",
       "sourceType": "github",
       "computedHash": "707623fa746d385929a81d9a57fa7923e19e3845fc46dbf87b857da15b8c183c"
+    },
+    "expect": {
+      "source": "millionco/expect",
+      "sourceType": "github",
+      "computedHash": "9a05dd2233fbde2e3fb125250caa637d0713f82e3ef6faed6aa25446f14e8373"
     }
   }
 }

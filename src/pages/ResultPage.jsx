@@ -3,7 +3,7 @@ import { useLocation, useNavigate, Navigate } from "react-router-dom";
 export default function ResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { result, forBaby, profile } = location.state || {};
+  const { result, forBaby, profile, userProfile } = location.state || {};
 
   if (!result) {
     return <Navigate to="/" replace />;
@@ -57,7 +57,9 @@ export default function ResultPage() {
               <h3 className="text-sm font-semibold text-gray-900 mb-1">
                 {forBaby && profile
                   ? `For ${profile.name}`
-                  : "For you"}
+                  : userProfile?.name
+                    ? `For ${userProfile.name}`
+                    : "For you"}
               </h3>
               <p className="text-sm text-gray-600">
                 {result.age_specific_notes}

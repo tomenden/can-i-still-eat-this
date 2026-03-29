@@ -1,0 +1,26 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "User's name"
+    },
+    "gender": {
+      "type": "string",
+      "enum": ["female", "male", "other"],
+      "description": "User's gender"
+    },
+    "is_pregnant": {
+      "type": "boolean",
+      "description": "Whether the user is currently pregnant (only applicable for female)"
+    }
+  },
+  "required": ["name", "gender"],
+  "rls": {
+    "create": true,
+    "read": { "created_by": "{{user.email}}" },
+    "update": { "created_by": "{{user.email}}" },
+    "delete": { "created_by": "{{user.email}}" }
+  }
+}
