@@ -34,6 +34,19 @@ npm run build
 npx base44 deploy --yes
 ```
 
+## GitHub Actions Deploy
+
+Pushes to `master` automatically deploy through `.github/workflows/deploy-base44.yml`.
+
+Before the workflow can deploy, add a repository secret named `BASE44_AUTH_JSON` whose value is the full contents of your local `~/.base44/auth/auth.json` file.
+
+After the secret is added, every merge to `master` will:
+
+- install dependencies with `npm ci`
+- build the site with `npm run build`
+- restore the Base44 CLI auth file from the secret
+- run `npx base44 deploy -y`
+
 ## Project Structure
 
 ```
