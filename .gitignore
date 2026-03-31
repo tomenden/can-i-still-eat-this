@@ -17,6 +17,7 @@ dist
 
 # Base44
 .app.json*
+!base44/.app.jsonc
 .types/
 .superpowers/
 

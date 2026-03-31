@@ -1,0 +1,6 @@
+// Base44 App Configuration
+// This file links your local project to your Base44 app.
+// Tracked so CI deploys always target the canonical production app.
+{
+  "id": "69c824db9cc68a413bb169d2"
+}
