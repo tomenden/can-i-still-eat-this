@@ -20,7 +20,7 @@ export default function CheckPage() {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [selectedChip, setSelectedChip] = useState(null);
   const [timeText, setTimeText] = useState("");
-  const [storageMethod, setStorageMethod] = useState(null);
+  const [storageMethod, setStorageMethod] = useState("refrigerated");
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState(null);
 
