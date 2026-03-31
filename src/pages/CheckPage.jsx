@@ -20,6 +20,7 @@ export default function CheckPage() {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [selectedChip, setSelectedChip] = useState(null);
   const [timeText, setTimeText] = useState("");
+  const [storageMethod, setStorageMethod] = useState(null);
   const [checking, setChecking] = useState(false);
   const [error, setError] = useState(null);
 
@@ -99,17 +100,25 @@ export default function CheckPage() {
         ? `The food is: ${foodText}`
         : "Please identify the food from the attached image.";
 
+      const storageDescription = {
+        counter: "left out at room temperature (on the counter)",
+        refrigerated: "stored in the refrigerator",
+        frozen: "stored in the freezer",
+      }[storageMethod] || "stored (storage method unknown)";
+
       const prompt = `You are a food safety expert. A parent is asking whether leftover food is still safe to eat.
 
 ${foodDescription}
 
 The food was made: ${timeDesc}.
+The food has been: ${storageDescription}.
 Today's date is: ${new Date().toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}.
 
 The person who would eat this food is: ${eaterDescription}.
 
 Analyze the food safety and respond with a JSON object. Be conservative — when in doubt, err on the side of caution, especially for babies, toddlers, and pregnant women. Consider:
-- How long the food type typically stays safe when refrigerated
+- How long the food type typically stays safe given the storage method (counter, fridge, or freezer)
+- Room temperature food spoils much faster than refrigerated food — factor this in heavily
 - Age-appropriate risks for babies/toddlers
 - Pregnancy-specific risks (listeria, mercury, toxoplasmosis, etc.) if the eater is pregnant
 - Common food safety guidelines from health authorities
@@ -156,7 +165,7 @@ Respond ONLY with the JSON object, no other text.`;
     }
   };
 
-  const canSubmit = (foodText || photoFile) && (selectedChip || timeText);
+  const canSubmit = (foodText || photoFile) && (selectedChip || timeText) && storageMethod;
 
   return (
     <div className="min-h-screen bg-gray-50 px-4 py-6">
@@ -301,6 +310,32 @@ Respond ONLY with the JSON object, no other text.`;
             placeholder="Or type: 'Sunday', 'last Thursday'..."
             className="block w-full rounded-lg border border-gray-300 px-3 py-2.5 text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           />
+        </div>
+
+        {/* Storage method */}
+        <div className="mb-5">
+          <label className="text-sm font-semibold text-gray-700 block mb-2">
+            How was it stored?
+          </label>
+          <div className="flex gap-2">
+            {[
+              { value: "counter", label: "🍽️ Counter" },
+              { value: "refrigerated", label: "❄️ Fridge" },
+              { value: "frozen", label: "🧊 Freezer" },
+            ].map((option) => (
+              <button
+                key={option.value}
+                onClick={() => setStorageMethod(option.value)}
+                className={`flex-1 py-2 rounded-lg text-sm font-medium transition-colors border ${
+                  storageMethod === option.value
+                    ? "bg-blue-100 text-blue-700 border-blue-300"
+                    : "bg-gray-100 text-gray-700 border-transparent hover:bg-gray-200"
+                }`}
+              >
+                {option.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {error && (
