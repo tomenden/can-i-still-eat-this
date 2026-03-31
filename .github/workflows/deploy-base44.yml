@@ -13,6 +13,9 @@ concurrency:
   group: base44-production
   cancel-in-progress: true
 
+env:
+  BASE44_PROJECT_ID: 69c824db9cc68a413bb169d2
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -45,6 +48,9 @@ jobs:
 
           mkdir -p "$HOME/.base44/auth"
           printf '%s' "$BASE44_AUTH_JSON" > "$HOME/.base44/auth/auth.json"
+
+      - name: Link Base44 project
+        run: npx base44 link --projectId "$BASE44_PROJECT_ID"
 
       - name: Deploy to Base44
         run: npx base44 deploy -y
