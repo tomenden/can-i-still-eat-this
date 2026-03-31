@@ -1,0 +1,50 @@
+name: Deploy Base44 Site
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: base44-production
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        run: npm run build
+
+      - name: Restore Base44 auth
+        env:
+          BASE44_AUTH_JSON: ${{ secrets.BASE44_AUTH_JSON }}
+        run: |
+          if [ -z "$BASE44_AUTH_JSON" ]; then
+            echo "Missing GitHub Actions secret: BASE44_AUTH_JSON"
+            exit 1
+          fi
+
+          mkdir -p "$HOME/.base44/auth"
+          printf '%s' "$BASE44_AUTH_JSON" > "$HOME/.base44/auth/auth.json"
+
+      - name: Deploy to Base44
+        run: npx base44 deploy -y
